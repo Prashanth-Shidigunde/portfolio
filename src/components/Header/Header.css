@@ -27,6 +27,7 @@
 
 .marquee-strip {
   width: 100%;
+  max-width: 100vw;
   overflow: hidden;
   background: rgba(2, 6, 15, 0.55);
   border-bottom: 1px solid rgba(56, 189, 248, 0.15);
@@ -36,6 +37,7 @@
   letter-spacing: 1.8px;
   text-transform: uppercase;
   color: var(--text-muted);
+  box-sizing: border-box;
 }
 
 .marquee-track {
@@ -73,6 +75,8 @@
 
 .main-nav {
   width: 100%;
+  max-width: 100vw;
+  box-sizing: border-box;
 }
 
 .nav-container {
@@ -82,12 +86,15 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
+  box-sizing: border-box;
+  width: 100%;
 }
 
 .brand-logo {
   text-decoration: none;
   display: flex;
   align-items: center;
+  min-width: 0;
 }
 
 .brand-logo .logo-text {
@@ -153,6 +160,7 @@
   display: flex;
   align-items: center;
   gap: 16px;
+  flex-shrink: 0;
 }
 
 .btn-book {
@@ -171,6 +179,7 @@
   align-items: center;
   justify-content: center;
   min-height: 40px;
+  cursor: pointer;
 }
 
 .btn-book:hover {
@@ -193,6 +202,7 @@
   cursor: pointer;
   z-index: 1005;
   transition: all 0.3s ease;
+  flex-shrink: 0;
 }
 
 .hamburger-bar {
@@ -247,6 +257,7 @@
   top: 0;
   right: -320px;
   width: 320px;
+  max-width: 85vw;
   height: 100vh;
   background: rgba(2, 6, 23, 0.95);
   backdrop-filter: blur(24px);
@@ -259,10 +270,11 @@
   justify-content: space-between;
   transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
   box-shadow: -10px 0 40px rgba(0, 0, 0, 0.8);
+  box-sizing: border-box;
 }
 
 .mobile-menu-drawer.open {
-  transform: translateX(-320px);
+  transform: translateX(-100%);
 }
 
 .mobile-nav-links {
@@ -294,4 +306,85 @@
   .mobile-nav-toggle {
     display: flex;
   }
+  .nav-container {
+    padding: 14px 20px;
+  }
 }
+
+@media (max-width: 768px) {
+  .nav-container {
+    padding: 10px 14px;
+    gap: 8px;
+  }
+
+  .brand-logo {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .brand-logo .logo-text {
+    font-size: clamp(0.85rem, 4vw, 1.15rem);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: block;
+    max-width: 100%;
+  }
+
+  .nav-actions {
+    gap: 8px;
+    flex-shrink: 0;
+  }
+
+  .btn-book {
+    padding: 6px 12px;
+    font-size: 10px;
+    letter-spacing: 0.5px;
+    min-height: 32px;
+    white-space: nowrap;
+    border-radius: 9999px;
+  }
+
+  .mobile-nav-toggle {
+    width: 36px;
+    height: 36px;
+    padding: 9px 7px;
+    border-radius: 8px;
+    flex-shrink: 0;
+  }
+
+  .marquee-strip {
+    padding: 6px 0;
+    font-size: 10px;
+    letter-spacing: 1.2px;
+  }
+}
+
+@media (max-width: 360px) {
+  .nav-container {
+    padding: 8px 10px;
+    gap: 6px;
+  }
+
+  .brand-logo .logo-text {
+    font-size: clamp(0.75rem, 3.6vw, 0.9rem);
+  }
+
+  .nav-actions {
+    gap: 6px;
+  }
+
+  .btn-book {
+    padding: 5px 8px;
+    font-size: 9px;
+    letter-spacing: 0.2px;
+    min-height: 30px;
+  }
+
+  .mobile-nav-toggle {
+    width: 32px;
+    height: 32px;
+    padding: 7px 5px;
+  }
+}
+
