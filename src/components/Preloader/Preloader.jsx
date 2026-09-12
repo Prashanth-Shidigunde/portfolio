@@ -2,27 +2,41 @@ import React, { useEffect, useState } from 'react';
 import './Preloader.css';
 
 export function Preloader({ loadProgress = 0, isLoaded = false }) {
-  const [internalLoaded, setInternalLoaded] = useState(false);
-  const displayProgress = Math.min(100, Math.max(0, Math.round(loadProgress)));
+  const [minTimeElapsed, setMinTimeElapsed] = useState(false);
+  const [visualProgress, setVisualProgress] = useState(0);
 
+  // Enforce minimum 1.75-second preloader duration
   useEffect(() => {
-    if (isLoaded || loadProgress >= 100) {
-      const timer = setTimeout(() => {
-        setInternalLoaded(true);
-      }, 300);
-      return () => clearTimeout(timer);
-    }
-  }, [isLoaded, loadProgress]);
+    const minTimer = setTimeout(() => {
+      setMinTimeElapsed(true);
+    }, 1750);
 
-  // Safety fallback: ensure preloader clears after max 3.5 seconds if asset loading stalls
-  useEffect(() => {
-    const safetyTimer = setTimeout(() => {
-      setInternalLoaded(true);
-    }, 3500);
-    return () => clearTimeout(safetyTimer);
+    return () => clearTimeout(minTimer);
   }, []);
 
-  const shouldHide = isLoaded || internalLoaded || loadProgress >= 100;
+  // Smoothly animate progress from 0% to 100% over the 1.75-second duration
+  useEffect(() => {
+    const startTime = Date.now();
+    const duration = 1750; // 1.75 seconds
+
+    const interval = setInterval(() => {
+      const elapsed = Date.now() - startTime;
+      const timeRatioPct = Math.min(100, Math.floor((elapsed / duration) * 100));
+
+      // Combine time-based smooth progress with real asset loading progress
+      const combinedProgress = Math.max(timeRatioPct, Math.round(loadProgress));
+      setVisualProgress(Math.min(100, combinedProgress));
+
+      if (elapsed >= duration && (isLoaded || loadProgress >= 100 || combinedProgress >= 100)) {
+        clearInterval(interval);
+      }
+    }, 30);
+
+    return () => clearInterval(interval);
+  }, [loadProgress, isLoaded]);
+
+  const displayProgress = visualProgress;
+  const shouldHide = minTimeElapsed && (isLoaded || loadProgress >= 100 || visualProgress >= 100);
 
   return (
     <div
