@@ -3,13 +3,15 @@ import storageService from '../services/storageService';
 
 export { supabase };
 
-// Helper to generate collision-safe sequential Booking ID (e.g., PBM-2026-00001)
+// Helper to generate a random unique Booking ID (e.g., PBM-2026-8K9F2)
 export function generateBookingId() {
   const currentYear = new Date().getFullYear();
-  let seq = parseInt(localStorage.getItem('pbm_booking_seq') || '0', 10) + 1;
-  localStorage.setItem('pbm_booking_seq', seq.toString());
-  const formattedSeq = String(seq).padStart(5, '0');
-  return `PBM-${currentYear}-${formattedSeq}`;
+  const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+  let randomCode = '';
+  for (let i = 0; i < 5; i++) {
+    randomCode += chars.charAt(Math.floor(Math.random() * chars.length));
+  }
+  return `PBM-${currentYear}-${randomCode}`;
 }
 
 /**
