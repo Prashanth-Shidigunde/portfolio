@@ -1,0 +1,30 @@
+.common-empty-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px;
+  text-align: center;
+  gap: 8px;
+  background: rgba(15, 23, 42, 0.4);
+  border: 1px dashed rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+}
+
+.empty-icon {
+  font-size: 32px;
+  margin-bottom: 4px;
+}
+
+.empty-title {
+  font-family: var(--font-headline, 'Cinzel', serif);
+  font-size: 15px;
+  color: #ffffff;
+  margin: 0;
+}
+
+.empty-message {
+  font-size: 12px;
+  color: #94a3b8;
+  margin: 0;
+}

@@ -1,0 +1,37 @@
+.common-error-banner {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: rgba(239, 68, 68, 0.12);
+  border: 1px solid rgba(239, 68, 68, 0.4);
+  color: #fca5a5;
+  padding: 12px 18px;
+  border-radius: 12px;
+  font-size: 13px;
+  margin: 12px 0;
+}
+
+.error-banner-icon {
+  font-size: 16px;
+}
+
+.error-banner-text {
+  flex: 1;
+  margin: 0;
+}
+
+.error-banner-retry-btn {
+  background: rgba(239, 68, 68, 0.2);
+  border: 1px solid rgba(239, 68, 68, 0.6);
+  color: #ffffff;
+  padding: 4px 12px;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.error-banner-retry-btn:hover {
+  background: rgba(239, 68, 68, 0.4);
+}

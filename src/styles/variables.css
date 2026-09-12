@@ -1,0 +1,35 @@
+:root {
+  --bg-dark: #000000;
+  --bg-cinematic: #020617;
+  
+  /* Primary Neon: Electric Cyan & Ice Blue */
+  --cyan-electric: #00f0ff;
+  --cyan-bright: #38bdf8;
+  --ice-blue: #7dd3fc;
+  --cyan-glow: rgba(0, 240, 255, 0.3);
+  --cyan-glow-strong: rgba(0, 240, 255, 0.65);
+  --cyan-border: rgba(56, 189, 248, 0.25);
+  
+  /* Secondary Neon: Deep Violet & Electric Purple */
+  --violet-deep: #7c3aed;
+  --violet-electric: #8b5cf6;
+  --violet-glow: rgba(139, 92, 246, 0.35);
+  --purple-glow: rgba(124, 58, 237, 0.5);
+
+  /* Accent: Hot Magenta / Pink */
+  --magenta-hot: #ec4899;
+  --magenta-glow: rgba(236, 72, 153, 0.4);
+
+  /* Glassmorphism Tokens */
+  --glass-bg: rgba(3, 7, 18, 0.45);
+  --glass-header-bg: rgba(2, 6, 15, 0.45);
+  --glass-border: rgba(56, 189, 248, 0.22);
+  --glass-border-light: rgba(255, 255, 255, 0.08);
+  --glass-blur: blur(32px) saturate(190%);
+
+  /* Typography */
+  --text-main: #ffffff;
+  --text-muted: #94a3b8;
+  --font-headline: 'Cinzel', serif;
+  --font-body: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+}

@@ -1,0 +1,30 @@
+.common-loader-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px;
+  gap: 14px;
+}
+
+.common-spinner {
+  width: 36px;
+  height: 36px;
+  border: 3px solid rgba(0, 240, 255, 0.15);
+  border-top-color: var(--cyan-electric, #00f0ff);
+  border-radius: 50%;
+  animation: commonSpin 0.8s linear infinite;
+}
+
+@keyframes commonSpin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.common-loader-text {
+  font-size: 13px;
+  color: #cbd5e1;
+  font-family: var(--font-body, 'Plus Jakarta Sans', sans-serif);
+  letter-spacing: 0.5px;
+}
