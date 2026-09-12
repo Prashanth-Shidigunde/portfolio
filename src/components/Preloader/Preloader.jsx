@@ -5,19 +5,19 @@ export function Preloader({ loadProgress = 0, isLoaded = false }) {
   const [minTimeElapsed, setMinTimeElapsed] = useState(false);
   const [visualProgress, setVisualProgress] = useState(0);
 
-  // Enforce minimum 1.50-second preloader duration
+  // Enforce minimum 1.75-second preloader duration
   useEffect(() => {
     const minTimer = setTimeout(() => {
       setMinTimeElapsed(true);
-    }, 1500);
+    }, 1750);
 
     return () => clearTimeout(minTimer);
   }, []);
 
-  // Smoothly animate progress from 0% to 100% over the 1.50-second duration
+  // Smoothly animate progress from 0% to 100% over the 1.75-second duration
   useEffect(() => {
     const startTime = Date.now();
-    const duration = 1500; // 1.50 seconds
+    const duration = 1750; // 1.75 seconds
 
     const interval = setInterval(() => {
       const elapsed = Date.now() - startTime;
