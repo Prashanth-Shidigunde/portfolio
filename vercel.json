@@ -1,0 +1,6 @@
+{
+  "rewrites": [
+    { "source": "/booking-invoice.html", "destination": "/booking-invoice.html" },
+    { "source": "/booking-invoice", "destination": "/booking-invoice.html" }
+  ]
+}
