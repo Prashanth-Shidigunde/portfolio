@@ -1,52 +1,108 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import useFeedback from '../../hooks/useFeedback';
+import { testimonialsData } from '../../data/testimonialsData';
 import './FeedbackCarousel.css';
 
 export function FeedbackCarousel({ onOpenFeedbackModal }) {
-  const { feedbackList, loading, error } = useFeedback();
+  const { feedbackList, loading } = useFeedback();
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [itemsPerSlide, setItemsPerSlide] = useState(3);
   const [isPaused, setIsPaused] = useState(false);
 
-  // Touch Swipe Handling State
+  const trackRef = useRef(null);
+  const slideRefs = useRef([]);
   const touchStartXRef = useRef(0);
   const touchEndXRef = useRef(0);
 
-  const count = feedbackList.length;
+  // Responsive items per slide (3 for desktop, 2 for tablet, 1 for mobile)
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth <= 640) {
+        setItemsPerSlide(1);
+      } else if (window.innerWidth <= 1024) {
+        setItemsPerSlide(2);
+      } else {
+        setItemsPerSlide(3);
+      }
+    };
+
+    handleResize();
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  // 1. Format approved feedback entries retrieved from Supabase DB
+  const supabaseApprovedItems = (feedbackList || []).map((item) => ({
+    id: `sb-${item.id}`,
+    rating: item.rating || 5,
+    quote: item.feedback,
+    name: item.full_name,
+    role: [item.role, item.service].filter(Boolean).join(' • ') || 'Client Partner'
+  }));
+
+  // 2. Format past feedback data (all 6 original testimonials)
+  const pastFeedbackItems = (testimonialsData || []).map((t) => ({
+    id: `past-${t.id}`,
+    rating: t.rating || 5,
+    quote: t.quote,
+    name: t.name,
+    role: t.role
+  }));
+
+  // 3. Combine: new approved Supabase feedback first, followed by all past feedback data
+  const combinedList = [...supabaseApprovedItems, ...pastFeedbackItems];
+
+  // 4. Assign zero-padded card numbers (01, 02, 03...)
+  const displayItems = combinedList.map((item, index) => ({
+    ...item,
+    num: String(index + 1).padStart(2, '0')
+  }));
+
+  // Chunk display items into slide pages
+  const slidesData = [];
+  for (let i = 0; i < displayItems.length; i += itemsPerSlide) {
+    slidesData.push(displayItems.slice(i, i + itemsPerSlide));
+  }
+
+  const slidesCount = slidesData.length;
 
   const nextSlide = useCallback(() => {
-    if (count <= 1) return;
-    setCurrentIndex((prev) => (prev + 1) % count);
-  }, [count]);
+    if (slidesCount <= 1) return;
+    setCurrentIndex((prev) => (prev + 1) % slidesCount);
+  }, [slidesCount]);
 
   const prevSlide = useCallback(() => {
-    if (count <= 1) return;
-    setCurrentIndex((prev) => (prev - 1 + count) % count);
-  }, [count]);
+    if (slidesCount <= 1) return;
+    setCurrentIndex((prev) => (prev - 1 + slidesCount) % slidesCount);
+  }, [slidesCount]);
 
-  // Check prefers-reduced-motion
   const prefersReducedMotion = useRef(
     window.matchMedia('(prefers-reduced-motion: reduce)').matches
   ).current;
 
   // Auto Rotation Timer (4 seconds)
   useEffect(() => {
-    if (count <= 1 || isPaused || prefersReducedMotion) return;
+    if (slidesCount <= 1 || isPaused || prefersReducedMotion) return;
 
     const timer = setInterval(() => {
       nextSlide();
     }, 4000);
 
     return () => clearInterval(timer);
-  }, [count, isPaused, prefersReducedMotion, nextSlide]);
+  }, [slidesCount, isPaused, prefersReducedMotion, nextSlide]);
 
-  // Reset index if count changes and current index is out of bounds
+  // Adjust container height based on active slide page height
   useEffect(() => {
-    if (currentIndex >= count && count > 0) {
-      setCurrentIndex(0);
+    const activeSlide = slideRefs.current[currentIndex];
+    if (activeSlide && trackRef.current) {
+      const h = activeSlide.offsetHeight;
+      if (h > 0) {
+        trackRef.current.style.height = `${h}px`;
+      }
     }
-  }, [count, currentIndex]);
+  }, [currentIndex, slidesData]);
 
-  // Touch handlers for mobile swipe
+  // Touch Swipe Handlers for Mobile
   const handleTouchStart = (e) => {
     setIsPaused(true);
     touchStartXRef.current = e.touches[0].clientX;
@@ -73,139 +129,130 @@ export function FeedbackCarousel({ onOpenFeedbackModal }) {
     setIsPaused(false);
   };
 
+  // Compute average score display from all items
+  const averageRating = displayItems.length > 0
+    ? (displayItems.reduce((acc, curr) => acc + curr.rating, 0) / displayItems.length).toFixed(1)
+    : '5.0';
+
   return (
     <div
-      className="feedback-carousel-panel glass-panel"
+      className="testimonials-glass-panel"
+      id="testimonial-carousel"
       onMouseEnter={() => setIsPaused(true)}
       onMouseLeave={() => setIsPaused(false)}
       onFocus={() => setIsPaused(true)}
       onBlur={() => setIsPaused(false)}
     >
-      {/* HEADER */}
-      <div className="feedback-carousel-header">
-        <div className="section-pill-badge small-badge">
-          <span className="badge-dot"></span>
-          <span>CLIENT FEEDBACK</span>
+      {/* HEADER WITH BADGE & SATISFACTION RATING */}
+      <div className="testimonials-header">
+        <div className="testimonials-header-left">
+          <div className="section-pill-badge small-badge">
+            <span className="badge-dot"></span>
+            <span>CLIENT FEEDBACK</span>
+          </div>
+          <h3 className="testimonials-title">WORDS FROM THE PEOPLE WE WORK WITH</h3>
         </div>
-        <h3 className="feedback-carousel-title">WHAT PEOPLE SAY</h3>
-        <p className="feedback-carousel-subtext">
-          Real experiences from people who have worked with Pulse_Blend_Media.
-        </p>
+        <div className="rating-badge-container">
+          <div className="rating-stars">
+            ★★★★★ <span className="rating-score">{averageRating}</span>
+          </div>
+          <span className="rating-label">SATISFACTION RATING</span>
+        </div>
       </div>
 
-      {/* CAROUSEL CONTENT AREA */}
-      <div className="feedback-carousel-viewport">
-        {loading ? (
-          <div className="feedback-state-box">
+      {/* CAROUSEL TRACK VIEWPORT */}
+      <div className="testimonial-carousel-container" ref={trackRef}>
+        {loading && displayItems.length === 0 ? (
+          <div className="feedback-loading-spinner">
             <div className="feedback-spinner"></div>
-            <p className="feedback-state-text">Loading feedback...</p>
-          </div>
-        ) : error ? (
-          <div className="feedback-state-box feedback-error-box">
-            <p className="feedback-state-text">{error}</p>
-          </div>
-        ) : count === 0 ? (
-          <div className="feedback-state-box feedback-empty-box">
-            <p className="empty-heading">Be the first to share your experience.</p>
-            <p className="empty-subtext">
-              We welcome honest feedback from our creative partners and clients.
-            </p>
+            <span>Loading client feedback...</span>
           </div>
         ) : (
           <div
-            className="feedback-carousel-track-container"
+            className="testimonial-cards-wrapper"
+            style={{
+              transform: `translateX(-${currentIndex * 100}%)`,
+              transition: prefersReducedMotion ? 'none' : 'transform 0.6s cubic-bezier(0.16, 1, 0.3, 1)'
+            }}
             onTouchStart={handleTouchStart}
             onTouchMove={handleTouchMove}
             onTouchEnd={handleTouchEnd}
           >
-            <div
-              className="feedback-slider-track"
-              style={{
-                transform: `translateX(-${currentIndex * 100}%)`,
-                transition: prefersReducedMotion ? 'none' : 'transform 0.6s cubic-bezier(0.16, 1, 0.3, 1)'
-              }}
-            >
-              {feedbackList.map((item, index) => (
-                <div key={item.id || index} className="feedback-card-slide">
-                  <div className="feedback-card-single">
-                    {/* Rating Stars & Service Tag */}
-                    <div className="feedback-card-top flex-between">
-                      <div className="feedback-stars-display" aria-label={`Rating: ${item.rating} out of 5 stars`}>
-                        {'★'.repeat(item.rating)}
+            {slidesData.map((slideItems, slideIdx) => (
+              <div
+                key={slideIdx}
+                ref={(el) => (slideRefs.current[slideIdx] = el)}
+                className={`testimonial-slide-page ${slideIdx === currentIndex ? 'active-slide' : ''}`}
+              >
+                <div className="testimonial-cards-grid">
+                  {slideItems.map((item) => (
+                    <div key={item.id} className="testimonial-card">
+                      <div className="testimonial-card-top">
+                        <span className="testimonial-num">{item.num}</span>
+                        <div className="testimonial-stars">{'★'.repeat(item.rating)}</div>
                       </div>
-                      {item.service && (
-                        <span className="feedback-service-tag">{item.service}</span>
-                      )}
-                    </div>
 
-                    {/* Quote Text */}
-                    <blockquote className="feedback-quote-text">
-                      "{item.feedback}"
-                    </blockquote>
+                      <blockquote className="testimonial-quote">"{item.quote}"</blockquote>
 
-                    {/* Author Meta */}
-                    <div className="feedback-author-meta">
-                      <div className="feedback-author-avatar">
-                        <span>
-                          {item.full_name
-                            ? item.full_name
-                                .split(' ')
-                                .map((n) => n[0])
-                                .join('')
-                                .substring(0, 2)
-                                .toUpperCase()
-                            : 'PB'}
-                        </span>
-                      </div>
-                      <div className="feedback-author-info">
-                        <h4 className="feedback-author-name">{item.full_name}</h4>
-                        {item.role && (
-                          <span className="feedback-author-role">{item.role}</span>
-                        )}
+                      <div className="testimonial-author">
+                        <div className="author-avatar">
+                          <span>
+                            {item.name
+                              ? item.name
+                                  .split(' ')
+                                  .map((n) => n[0])
+                                  .join('')
+                                  .substring(0, 2)
+                                  .toUpperCase()
+                              : 'PB'}
+                          </span>
+                        </div>
+                        <div className="author-meta">
+                          <h4 className="author-name">{item.name}</h4>
+                          <span className="author-role">{item.role}</span>
+                        </div>
                       </div>
                     </div>
-                  </div>
+                  ))}
                 </div>
-              ))}
-            </div>
+              </div>
+            ))}
           </div>
         )}
       </div>
 
-      {/* CONTROLS (Displayed only when 2+ entries exist) */}
-      {!loading && !error && count > 1 && (
-        <div className="feedback-carousel-controls">
+      {/* CONTROLS (Displayed when 2+ slide pages exist) */}
+      {slidesCount > 1 && (
+        <div className="carousel-controls">
           <button
-            className="feedback-carousel-btn"
+            className="carousel-btn"
             onClick={prevSlide}
-            aria-label="Previous Feedback"
+            aria-label="Previous Slide"
           >
             ←
           </button>
-
-          <div className="feedback-carousel-dots">
-            {feedbackList.map((_, i) => (
+          <div className="carousel-dots">
+            {slidesData.map((_, i) => (
               <button
                 key={i}
-                className={`feedback-carousel-dot ${i === currentIndex ? 'active' : ''}`}
+                className={`carousel-dot ${i === currentIndex ? 'active' : ''}`}
                 onClick={() => setCurrentIndex(i)}
-                aria-label={`Go to feedback ${i + 1}`}
+                aria-label={`Go to slide ${i + 1}`}
               />
             ))}
           </div>
-
           <button
-            className="feedback-carousel-btn"
+            className="carousel-btn"
             onClick={nextSlide}
-            aria-label="Next Feedback"
+            aria-label="Next Slide"
           >
-            Next →
+            →
           </button>
         </div>
       )}
 
-      {/* SHARE YOUR FEEDBACK BUTTON */}
-      <div className="feedback-carousel-cta">
+      {/* SHARE YOUR FEEDBACK CTA BUTTON */}
+      <div className="feedback-carousel-cta-bar">
         <button
           type="button"
           className="btn-share-feedback"
