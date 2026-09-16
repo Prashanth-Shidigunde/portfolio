@@ -1,8 +1,26 @@
-import React from 'react';
-import { TestimonialsCarousel } from '../../components/Testimonials/TestimonialsCarousel';
+import React, { useState } from 'react';
+import FeedbackCarousel from '../../components/feedback/FeedbackCarousel';
+import FeedbackModal from '../../components/feedback/FeedbackModal';
+import useFeedback from '../../hooks/useFeedback';
 import './About.css';
 
-export function About() {
+export function About({ onOpenLegal }) {
+  const [isFeedbackModalOpen, setIsFeedbackModalOpen] = useState(false);
+  const { isSubmitting, submitSuccess, submitError, submitFeedback, resetFormState } = useFeedback();
+
+  const handleOpenModal = () => {
+    resetFormState();
+    setIsFeedbackModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsFeedbackModalOpen(false);
+  };
+
+  const handleSubmitFeedback = async (formData) => {
+    await submitFeedback(formData);
+  };
+
   return (
     <section id="about" className="about-section">
       <div className="about-container">
@@ -37,12 +55,26 @@ export function About() {
             </div>
           </div>
 
-          {/* Right Column: Large Glass Testimonials Panel */}
+          {/* Right Column: Dynamic Glass Feedback Panel */}
           <div className="testimonials-col reveal-on-scroll">
-            <TestimonialsCarousel />
+            <FeedbackCarousel onOpenFeedbackModal={handleOpenModal} />
           </div>
         </div>
       </div>
+
+      {/* Glass Feedback Modal */}
+      <FeedbackModal
+        isOpen={isFeedbackModalOpen}
+        onClose={handleCloseModal}
+        onSubmitFeedback={handleSubmitFeedback}
+        isSubmitting={isSubmitting}
+        submitError={submitError}
+        submitSuccess={submitSuccess}
+        onOpenLegal={onOpenLegal}
+      />
     </section>
   );
 }
+
+export default About;
+

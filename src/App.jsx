@@ -68,7 +68,7 @@ export function App() {
         <Hero onOpenBooking={handleOpenBooking} />
         <Services onOpenBooking={handleOpenBooking} />
         <Works />
-        <About />
+        <About onOpenLegal={(type) => setActiveLegalDoc(type)} />
         <Contact />
         <Footer onOpenLegal={(type) => setActiveLegalDoc(type)} />
       </main>
