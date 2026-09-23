@@ -46,11 +46,10 @@ export function Services({ onOpenBooking }) {
               key={idx}
               className="extra-service-chip"
               style={{ cursor: 'pointer' }}
-              onClick={() => onOpenBooking && onOpenBooking('Custom Requirement')}
+              onClick={() => onOpenBooking && onOpenBooking(chip.name)}
             >
-              <span className="chip-num">{chip.num}</span>
               <span className="chip-name">{chip.name}</span>
-              <span className="chip-icon">+</span>
+              <span className="chip-price">{chip.price}</span>
             </div>
           ))}
         </div>

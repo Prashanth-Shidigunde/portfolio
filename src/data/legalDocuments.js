@@ -13,8 +13,10 @@ export const legalDocuments = {
       <h4>3. Booking & Confirmation</h4>
       <p>Project bookings and shooting schedules are confirmed upon agreement of scope and receipt of any agreed advance deposit or written confirmation.</p>
 
-      <h4>4. Pricing & Payment</h4>
-      <p>Pricing for services is based on agreed project scope. Payment terms will be specified in individual project invoices or agreements. Final deliverables are released upon full payment completion.</p>
+      <h4>4. Booking Payment</h4>
+      <p>A 50% advance payment is required when the booking is confirmed and the project is scheduled to begin. The remaining 50% balance is payable after the project is completed and the agreed deliverables are ready for final delivery.</p>
+      <p>Work scheduling begins after the required 50% advance payment is received.</p>
+      <p>The final deliverables are subject to completion of the agreed scope and settlement of the remaining balance.</p>
 
       <h4>5. Revisions</h4>
       <p>Projects include reasonable revision rounds as specified in individual project scopes. Additional major scope changes outside initial agreements may be subject to custom adjustments.</p>

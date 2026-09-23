@@ -1,8 +1,31 @@
 import React from 'react';
 import './ServiceCard.css';
 
+function parsePriceDisplay(item) {
+  if (item.priceAmount) {
+    return { amount: item.priceAmount, suffix: item.priceSuffix || '' };
+  }
+
+  const str = item.priceValue || '';
+
+  if (str.toLowerCase().includes('starting from')) {
+    const match = str.match(/₹[\d,]+/);
+    const amount = match ? match[0] : str;
+    return { amount, suffix: '/ STARTING FROM' };
+  }
+
+  if (str.toLowerCase().includes('per month')) {
+    const match = str.match(/₹[\d,]+/);
+    const amount = match ? match[0] : str;
+    return { amount, suffix: '/ PER MONTH' };
+  }
+
+  return { amount: str, suffix: '' };
+}
+
 export function ServiceCard({ item, onOpenBooking }) {
   const isWhatsApp = item.isCustom;
+  const { amount, suffix } = parsePriceDisplay(item);
 
   const handleButtonClick = (e) => {
     if (!isWhatsApp) {
@@ -25,7 +48,10 @@ export function ServiceCard({ item, onOpenBooking }) {
       <div className="card-bottom">
         <div className="service-price">
           <span className="price-label">{item.priceLabel}</span>
-          <span className="price-value">{item.priceValue}</span>
+          <div className="price-value-container">
+            <span className="price-amount-bold">{amount}</span>
+            {suffix && <span className="price-suffix-red">{suffix}</span>}
+          </div>
         </div>
         <a
           href={item.btnLink}
@@ -40,4 +66,6 @@ export function ServiceCard({ item, onOpenBooking }) {
     </div>
   );
 }
+
+export default ServiceCard;
 

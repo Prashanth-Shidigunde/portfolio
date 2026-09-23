@@ -172,8 +172,17 @@ export function BookingModal({ isOpen, initialService, onClose, onOpenLegal }) {
     'Photo Editing',
     'Indoor & Outdoor Shooting',
     'Website Design',
+    'Computer Classes',
     'Piano Classes',
-    'Computer Teaching',
+    'Color Grading',
+    'Reel Editing',
+    'YouTube Editing',
+    'Thumbnail Design',
+    'Social Media Creatives',
+    'Product Editing',
+    'Business Web Dev',
+    'Landing Page Design',
+    '3D Website Development',
     'Custom Requirement'
   ];
 
@@ -644,6 +653,16 @@ export function BookingModal({ isOpen, initialService, onClose, onOpenLegal }) {
                     ))}
                   </div>
                 )}
+              </div>
+
+              {/* PAYMENT NOTE NOTICE */}
+              <div className="form-section-card glass-panel payment-note-card">
+                <div className="payment-note-header">
+                  <span className="payment-note-badge">PAYMENT NOTE</span>
+                </div>
+                <p className="payment-note-text">
+                  50% advance payment is required to confirm and schedule the booking. The remaining 50% is payable after project completion.
+                </p>
               </div>
 
               {/* TERMS & PRIVACY CONSENT SECTION */}

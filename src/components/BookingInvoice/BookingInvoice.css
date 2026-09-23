@@ -230,6 +230,24 @@
   color: #ffffff;
 }
 
+.payment-terms-text {
+  font-size: 11px;
+  font-weight: 800;
+  color: var(--cyan-bright, #38bdf8);
+  letter-spacing: 0.5px;
+}
+
+.status-unpaid {
+  color: #f59e0b;
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.advance-value {
+  color: var(--cyan-bright, #38bdf8);
+  font-weight: 800;
+}
+
 .highlight-id {
   color: var(--cyan-bright, #00f0ff);
   font-family: monospace;

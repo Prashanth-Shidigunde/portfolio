@@ -122,7 +122,7 @@ export function BookingInvoice({ bookingId: propBookingId }) {
         <div className="invoice-disclaimer-banner">
           <span className="disclaimer-icon">⚠️</span>
           <p className="disclaimer-text">
-            <strong>IMPORTANT NOTICE:</strong> Estimated budget is provided by the customer and is not a final confirmed quotation or proof of payment. Booking status is currently <strong>REQUESTED</strong>.
+            <strong>PAYMENT &amp; BOOKING NOTICE:</strong> Estimated budget is provided by the customer. Payment terms: 50% advance required upon booking confirmation to schedule work; 50% balance payable after project completion. Booking status is currently <strong>REQUESTED (UNPAID)</strong>.
           </p>
         </div>
 
@@ -137,8 +137,16 @@ export function BookingInvoice({ bookingId: propBookingId }) {
             <span className="meta-value">{formatDate(record.created_at)}</span>
           </div>
           <div className="meta-item">
-            <span className="meta-label">BOOKING STATUS</span>
-            <span className="meta-value status-badge">{record.status}</span>
+            <span className="meta-label">REQUEST STATUS</span>
+            <span className="meta-value status-badge">{record.status || 'REQUESTED'}</span>
+          </div>
+          <div className="meta-item">
+            <span className="meta-label">PAYMENT TERMS</span>
+            <span className="meta-value payment-terms-text">50% ADVANCE / 50% AFTER COMPLETION</span>
+          </div>
+          <div className="meta-item">
+            <span className="meta-label">PAYMENT STATUS</span>
+            <span className="meta-value status-unpaid">UNPAID (Pending Advance)</span>
           </div>
         </div>
 
@@ -193,10 +201,26 @@ export function BookingInvoice({ bookingId: propBookingId }) {
               <span className="detail-value">{record.preferred_time || 'Flexible Slot (Recommended)'}</span>
             </div>
             <div className="detail-row">
-              <span className="detail-label">Estimated Budget:</span>
+              <span className="detail-label">Estimated Budget / Amount:</span>
               <span className="detail-value budget-highlight">₹{record.estimated_budget}</span>
             </div>
             <div className="detail-row">
+              <span className="detail-label">Payment Terms:</span>
+              <span className="detail-value">50% Advance / 50% Balance After Completion</span>
+            </div>
+            <div className="detail-row">
+              <span className="detail-label">50% Advance Required:</span>
+              <span className="detail-value advance-value">
+                ₹{Math.round((Number(record.estimated_budget) || 0) * 0.5)}
+              </span>
+            </div>
+            <div className="detail-row">
+              <span className="detail-label">50% Final Balance Due:</span>
+              <span className="detail-value">
+                ₹{Math.round((Number(record.estimated_budget) || 0) * 0.5)}
+              </span>
+            </div>
+            <div className="detail-row full">
               <span className="detail-label">Reference Link:</span>
               <span className="detail-value">
                 {record.reference_link ? (
