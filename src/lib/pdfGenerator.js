@@ -50,7 +50,7 @@ export async function downloadBookingPDF(elementId, bookingId = 'PBM-2026-00001'
     }
 
     const cleanBookingId = bookingId.replace(/[^a-zA-Z0-9_-]/g, '_');
-    pdf.save(`PulseBlendMedia_Booking_${cleanBookingId}.pdf`);
+    pdf.save(`Pulse_Blend_Media_Booking_${cleanBookingId}.pdf`);
     return true;
   } catch (err) {
     console.error('PDF Generation Error:', err);

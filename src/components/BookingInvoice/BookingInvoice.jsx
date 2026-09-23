@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import invoiceService from '../../services/invoiceService';
 import notificationService from '../../services/notificationService';
 import { BookingFilesViewer } from '../common/BookingFilesViewer';
+import logoImg from '../../assets/images/pulse-blend-media-logo.png';
 import './BookingInvoice.css';
 
 export function BookingInvoice({ bookingId: propBookingId }) {
@@ -83,7 +84,7 @@ export function BookingInvoice({ bookingId: propBookingId }) {
       {/* Top Action Bar (no-print) */}
       <div className="invoice-action-bar no-print">
         <div className="action-bar-left">
-          <span className="brand-logo-small">pulseblendmedia</span>
+          <img src={logoImg} alt="Pulse_Blend_Media" className="action-bar-logo-img" />
           <span className="action-tag">PROVISIONAL INVOICE</span>
         </div>
         <div className="action-bar-right">
@@ -108,7 +109,7 @@ export function BookingInvoice({ bookingId: propBookingId }) {
         {/* Document Header */}
         <div className="invoice-doc-header">
           <div className="doc-brand-block">
-            <span className="doc-brand-title">PULSE_BLEND_MEDIA</span>
+            <img src={logoImg} alt="Pulse_Blend_Media" className="invoice-header-logo-img" />
             <span className="doc-brand-subtitle">Creative Visuals &amp; Digital Studio</span>
           </div>
           <div className="doc-type-block">

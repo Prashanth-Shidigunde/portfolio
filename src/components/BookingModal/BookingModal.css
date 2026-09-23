@@ -62,6 +62,16 @@
   width: 100%;
 }
 
+.booking-modal-logo-img {
+  height: clamp(38px, 6vw, 52px);
+  width: auto;
+  max-width: 240px;
+  object-fit: contain;
+  display: block;
+  margin-bottom: 6px;
+  filter: drop-shadow(0 0 12px rgba(0, 240, 255, 0.4));
+}
+
 .small-badge {
   padding: 4px 12px;
   font-size: 10px;

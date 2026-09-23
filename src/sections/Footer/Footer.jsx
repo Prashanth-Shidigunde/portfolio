@@ -1,4 +1,5 @@
 import React from 'react';
+import logoImg from '../../assets/images/pulse-blend-media-logo.png';
 import './Footer.css';
 
 export function Footer({ onOpenLegal }) {
@@ -15,7 +16,7 @@ export function Footer({ onOpenLegal }) {
           {/* 1. Brand Area */}
           <div className="footer-brand-col">
             <a href="#home" className="footer-logo">
-              <span className="logo-text">Pulse_Blend_Media</span>
+              <img src={logoImg} alt="Pulse_Blend_Media" className="footer-logo-img" />
             </a>
             <p className="footer-tagline">Creative visuals. Digital experiences. Meaningful ideas.</p>
             <p className="footer-brand-desc">

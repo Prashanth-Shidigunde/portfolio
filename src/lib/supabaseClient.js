@@ -25,12 +25,12 @@ export async function saveServiceBooking(formData, files = []) {
     console.error('❌ Supabase client is not initialized. Please verify VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY.');
     return {
       success: false,
-      message: 'Supabase client is not configured. Please check environment variables.'
+      message: 'Your booking could not be submitted. Please try again.'
     };
   }
 
   try {
-    // 1. Upload each selected actual browser File object to Supabase Storage ('client-files' bucket)
+    // 1. Upload each selected reference file to Supabase Storage ('client-files' bucket)
     const uploadedFilesReferences = [];
 
     if (files && files.length > 0) {
@@ -41,7 +41,7 @@ export async function saveServiceBooking(formData, files = []) {
           console.error(`❌ Storage upload failed for file "${file.name}":`, uploadRes.error);
           return {
             success: false,
-            message: `Storage Upload Failed (${file.name}): ${uploadRes.error}. Please check Storage bucket and RLS policies.`,
+            message: 'One or more reference files could not be uploaded. Please try again.',
             error: uploadRes.error
           };
         }
@@ -50,7 +50,7 @@ export async function saveServiceBooking(formData, files = []) {
       }
     }
 
-    // 2. Prepare DB Payload containing uploaded_files JSONB array with real Storage file paths
+    // 2. Prepare DB Payload containing all booking details with status = 'REQUESTED'
     const dbBookingPayload = {
       booking_id: bookingId,
       full_name: formData.customer.fullName,
@@ -58,7 +58,9 @@ export async function saveServiceBooking(formData, files = []) {
       country: formData.customer.country,
       state: formData.customer.state,
       mobile_number: formData.customer.mobile,
-      service: formData.service.selectedService,
+      service: formData.service.selectedService === 'Custom Requirement' && formData.service.customServiceName
+        ? `Custom Requirement (${formData.service.customServiceName})`
+        : formData.service.selectedService,
       custom_service_name: formData.service.customServiceName || null,
       project_requirements: formData.service.projectRequirements,
       preferred_date: formData.service.preferredDate || null,
@@ -68,7 +70,9 @@ export async function saveServiceBooking(formData, files = []) {
       uploaded_files: uploadedFilesReferences,
       terms_accepted: Boolean(formData.consent.termsAccepted),
       privacy_accepted: Boolean(formData.consent.privacyAccepted),
-      status: 'REQUESTED'
+      status: 'REQUESTED',
+      created_at: createdAt,
+      updated_at: createdAt
     };
 
     // 3. Insert record into Supabase service_bookings table
@@ -94,7 +98,7 @@ export async function saveServiceBooking(formData, files = []) {
       console.error('❌ SUPABASE DB INSERT ERROR:', dbError);
       return {
         success: false,
-        message: `Database Insert Error (${dbError.code}): ${dbError.message}`,
+        message: 'Your booking could not be submitted. Please try again.',
         error: dbError.message
       };
     }
@@ -103,7 +107,7 @@ export async function saveServiceBooking(formData, files = []) {
       console.error('❌ Supabase insert returned empty data.');
       return {
         success: false,
-        message: 'Database insertion did not return created record.'
+        message: 'Your booking could not be submitted. Please try again.'
       };
     }
 
@@ -119,21 +123,29 @@ export async function saveServiceBooking(formData, files = []) {
     // 4. Save metadata entries into booking_files table
     if (uploadedFilesReferences.length > 0) {
       for (const fileRef of uploadedFilesReferences) {
-        await supabase.from('booking_files').insert([{
-          booking_id: dbId,
-          booking_code: bookingId,
-          file_name: fileRef.name,
-          storage_path: fileRef.path,
-          mime_type: fileRef.type,
-          file_size: fileRef.size,
-          created_at: createdAt
-        }]);
+        try {
+          await supabase.from('booking_files').insert([{
+            booking_id: dbId,
+            booking_code: bookingId,
+            file_name: fileRef.name,
+            storage_path: fileRef.path,
+            mime_type: fileRef.type,
+            file_size: fileRef.size,
+            created_at: createdAt
+          }]);
+        } catch (fileDbErr) {
+          console.warn('Notice: booking_files metadata insertion notice:', fileDbErr);
+        }
       }
     }
 
     // 5. Cache latest booking record locally for instant invoice rendering
-    localStorage.setItem(`pbm_booking_${bookingId}`, JSON.stringify(dbRecord));
-    localStorage.setItem('pbm_latest_booking', JSON.stringify(dbRecord));
+    try {
+      localStorage.setItem(`pbm_booking_${bookingId}`, JSON.stringify(dbRecord));
+      localStorage.setItem('pbm_latest_booking', JSON.stringify(dbRecord));
+    } catch (e) {
+      console.warn('LocalStorage save notice:', e);
+    }
 
     return {
       success: true,
@@ -144,7 +156,7 @@ export async function saveServiceBooking(formData, files = []) {
     console.error('❌ Unexpected Supabase Booking Exception:', err);
     return {
       success: false,
-      message: err.message || 'An unexpected error occurred during booking processing.'
+      message: 'Your booking could not be submitted. Please try again.'
     };
   }
 }

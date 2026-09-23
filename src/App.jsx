@@ -16,7 +16,7 @@ import { BookingModal } from './components/BookingModal/BookingModal';
 
 import { Hero } from './sections/Hero/Hero';
 import { Services } from './sections/Services/Services';
-import { Works } from './sections/Works/Works';
+import { WhyPulseBlendMedia } from './sections/WhyPulseBlendMedia/WhyPulseBlendMedia';
 import { About } from './sections/About/About';
 import { Contact } from './sections/Contact/Contact';
 import { Footer } from './sections/Footer/Footer';
@@ -67,7 +67,7 @@ export function App() {
       <main className="content-wrapper">
         <Hero onOpenBooking={handleOpenBooking} />
         <Services onOpenBooking={handleOpenBooking} />
-        <Works />
+        <WhyPulseBlendMedia />
         <About onOpenLegal={(type) => setActiveLegalDoc(type)} />
         <Contact />
         <Footer onOpenLegal={(type) => setActiveLegalDoc(type)} />

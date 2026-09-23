@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 724 724" width="724" height="724">
+  <defs>
+    <clipPath id="emblemClip">
+      <rect x="0" y="0" width="724" height="724" rx="80" />
+    </clipPath>
+  </defs>
+  <image href="/pulse-blend-media-logo.png" x="0" y="0" width="2172" height="724" clip-path="url(#emblemClip)" />
+</svg>
