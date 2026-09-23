@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import logoImg from '../../assets/images/pulse-blend-media-logo.png';
 import './Preloader.css';
 
 export function Preloader({ loadProgress = 0, isLoaded = false }) {
@@ -56,10 +57,8 @@ export function Preloader({ loadProgress = 0, isLoaded = false }) {
 
           {/* Central Brand */}
           <div className="preloader-brand">
+            <img src={logoImg} alt="Pulse_Blend_Media" className="preloader-logo-img" />
             <span className="preloader-tagline">CREATIVE STUDIO • PRODUCTION • DIGITAL</span>
-            <h1 className="preloader-logo-title">
-              Pulse<span className="logo-accent">_</span>Blend<span className="logo-accent">_</span>Media
-            </h1>
           </div>
         </div>
 

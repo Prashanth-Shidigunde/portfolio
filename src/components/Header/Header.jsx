@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import logoImg from '../../assets/images/pulse-blend-media-logo.png';
 import './Header.css';
 
 export function Header({ activeSection, onOpenBooking }) {
@@ -7,7 +8,7 @@ export function Header({ activeSection, onOpenBooking }) {
   const navItems = [
     { id: 'home', label: 'HOME', href: '#home' },
     { id: 'services', label: 'SERVICES', href: '#services' },
-    { id: 'work', label: 'WORK', href: '#work' },
+    { id: 'why-pulseblend', label: 'WORK', href: '#why-pulseblend' },
     { id: 'about', label: 'ABOUT', href: '#about' },
     { id: 'contact', label: 'CONTACT', href: '#contact' },
   ];
@@ -33,37 +34,37 @@ export function Header({ activeSection, onOpenBooking }) {
         <div className="marquee-track">
           <div className="marquee-content">
             <span>
-              <strong className="brand-highlight">pulseblendmedia</strong> &nbsp;—&nbsp; AS PER YOUR REQUIREMENTS, PRICES MAY CHANGE
+              <strong className="brand-highlight">Pulse_Blend_Media</strong> &nbsp;—&nbsp; AS PER YOUR REQUIREMENTS, PRICES MAY CHANGE
             </span>
             <span className="dot">&nbsp;•&nbsp;</span>
             <span>
-              <strong className="brand-highlight">pulseblendmedia</strong> &nbsp;—&nbsp; AS PER YOUR REQUIREMENTS, PRICES MAY CHANGE
+              <strong className="brand-highlight">Pulse_Blend_Media</strong> &nbsp;—&nbsp; AS PER YOUR REQUIREMENTS, PRICES MAY CHANGE
             </span>
             <span className="dot">&nbsp;•&nbsp;</span>
             <span>
-              <strong className="brand-highlight">pulseblendmedia</strong> &nbsp;—&nbsp; AS PER YOUR REQUIREMENTS, PRICES MAY CHANGE
+              <strong className="brand-highlight">Pulse_Blend_Media</strong> &nbsp;—&nbsp; AS PER YOUR REQUIREMENTS, PRICES MAY CHANGE
             </span>
             <span className="dot">&nbsp;•&nbsp;</span>
             <span>
-              <strong className="brand-highlight">pulseblendmedia</strong> &nbsp;—&nbsp; AS PER YOUR REQUIREMENTS, PRICES MAY CHANGE
+              <strong className="brand-highlight">Pulse_Blend_Media</strong> &nbsp;—&nbsp; AS PER YOUR REQUIREMENTS, PRICES MAY CHANGE
             </span>
             <span className="dot">&nbsp;•&nbsp;</span>
           </div>
           <div className="marquee-content" aria-hidden="true">
             <span>
-              <strong className="brand-highlight">pulseblendmedia</strong> &nbsp;—&nbsp; AS PER YOUR REQUIREMENTS, PRICES MAY CHANGE
+              <strong className="brand-highlight">Pulse_Blend_Media</strong> &nbsp;—&nbsp; AS PER YOUR REQUIREMENTS, PRICES MAY CHANGE
             </span>
             <span className="dot">&nbsp;•&nbsp;</span>
             <span>
-              <strong className="brand-highlight">pulseblendmedia</strong> &nbsp;—&nbsp; AS PER YOUR REQUIREMENTS, PRICES MAY CHANGE
+              <strong className="brand-highlight">Pulse_Blend_Media</strong> &nbsp;—&nbsp; AS PER YOUR REQUIREMENTS, PRICES MAY CHANGE
             </span>
             <span className="dot">&nbsp;•&nbsp;</span>
             <span>
-              <strong className="brand-highlight">pulseblendmedia</strong> &nbsp;—&nbsp; AS PER YOUR REQUIREMENTS, PRICES MAY CHANGE
+              <strong className="brand-highlight">Pulse_Blend_Media</strong> &nbsp;—&nbsp; AS PER YOUR REQUIREMENTS, PRICES MAY CHANGE
             </span>
             <span className="dot">&nbsp;•&nbsp;</span>
             <span>
-              <strong className="brand-highlight">pulseblendmedia</strong> &nbsp;—&nbsp; AS PER YOUR REQUIREMENTS, PRICES MAY CHANGE
+              <strong className="brand-highlight">Pulse_Blend_Media</strong> &nbsp;—&nbsp; AS PER YOUR REQUIREMENTS, PRICES MAY CHANGE
             </span>
             <span className="dot">&nbsp;•&nbsp;</span>
           </div>
@@ -74,7 +75,7 @@ export function Header({ activeSection, onOpenBooking }) {
       <nav className="main-nav">
         <div className="nav-container">
           <a href="#home" className="brand-logo" onClick={closeMenu}>
-            <span className="logo-text">pulseblendmedia</span>
+            <img src={logoImg} alt="Pulse_Blend_Media" className="header-logo-img" />
           </a>
 
           <ul className="nav-links">

@@ -3,6 +3,7 @@ import { indianStates, countriesList, countryCodes } from '../../data/locationDa
 import { useBooking } from '../../hooks/useBooking';
 import fileService from '../../services/fileService';
 import { validateBookingForm } from '../../utils/validation';
+import logoImg from '../../assets/images/pulse-blend-media-logo.png';
 import './BookingModal.css';
 
 const MAX_FILE_SIZE_MB = 25;
@@ -147,7 +148,15 @@ export function BookingModal({ isOpen, initialService, onClose, onOpenLegal }) {
     if (isSubmitting) return;
     if (!validateForm()) return;
 
-    await submitBooking(formData, selectedFiles);
+    const res = await submitBooking(formData, selectedFiles);
+
+    if (res && res.success && res.whatsappUrl) {
+      try {
+        window.location.href = res.whatsappUrl;
+      } catch (err) {
+        console.warn('WhatsApp redirect notice:', err);
+      }
+    }
   };
 
   const handleReset = () => {
@@ -187,10 +196,7 @@ export function BookingModal({ isOpen, initialService, onClose, onOpenLegal }) {
         {/* Modal Header */}
         <div className="booking-modal-header">
           <div className="modal-header-content">
-            <div className="section-pill-badge small-badge">
-              <span className="badge-dot"></span>
-              <span>PULSE_BLEND_MEDIA WORKS</span>
-            </div>
+            <img src={logoImg} alt="Pulse_Blend_Media" className="booking-modal-logo-img" />
             <h2 className="modal-heading">SERVICE BOOKING &amp; RESERVATION</h2>
             <p className="modal-subtext">
               Tell us what you need and share the details required to plan your project.
@@ -208,12 +214,8 @@ export function BookingModal({ isOpen, initialService, onClose, onOpenLegal }) {
               <div className="success-icon-badge">✓</div>
 
               <h3 className="success-heading">
-                THANK YOU, {getFirstName(submittedData.customer.fullName).toUpperCase()}!
+                Your booking was saved successfully.
               </h3>
-
-              <p className="success-message">
-                Your booking request has been received successfully.
-              </p>
 
               {/* BOOKING DATA SUMMARY CARD */}
               <div className="summary-card glass-panel">
@@ -257,28 +259,28 @@ export function BookingModal({ isOpen, initialService, onClose, onOpenLegal }) {
               </div>
 
               <p className="success-next-steps">
-                We'll review your request and get back to you regarding the next steps.
+                Click below to send your pre-filled booking details directly to our WhatsApp.
               </p>
 
               <div className="thankyou-actions-grid">
+                <button
+                  type="button"
+                  className="btn-thankyou btn-owner-wa"
+                  onClick={() => {
+                    if (submittedData.whatsappUrl) {
+                      window.open(submittedData.whatsappUrl, '_blank', 'noopener,noreferrer');
+                    }
+                  }}
+                >
+                  OPEN WHATSAPP
+                </button>
+
                 <button
                   type="button"
                   className="btn-thankyou btn-view-invoice"
                   onClick={() => window.open(`/booking-invoice.html?id=${submittedData.bookingId}`, '_blank', 'noopener,noreferrer')}
                 >
                   VIEW BOOKING INVOICE ↗
-                </button>
-
-                <button
-                  type="button"
-                  className="btn-thankyou btn-owner-wa"
-                  onClick={() => {
-                    const ownerNum = '916304834605';
-                    const msg = `🔔 NEW PULSE_BLEND_MEDIA BOOKING\n\nBooking ID: ${submittedData.bookingId}\nName: ${submittedData.customer.fullName}\nEmail: ${submittedData.customer.email}\nMobile: ${submittedData.customer.mobile}\nCountry: ${submittedData.customer.country}\nState: ${submittedData.customer.state}\n\nService: ${submittedData.service.selectedService}${submittedData.service.customServiceName ? ` (${submittedData.service.customServiceName})` : ''}\nRequirements:\n${submittedData.service.projectRequirements}\n\nPreferred Date: ${submittedData.service.preferredDate || 'Flexible'}\nPreferred Time: ${submittedData.service.preferredTimeSlot || 'Flexible'}\n\nEstimated Budget: ₹${submittedData.service.estimatedBudget}\n\nRequest Status: REQUESTED`;
-                    window.open(`https://wa.me/${ownerNum}?text=${encodeURIComponent(msg)}`, '_blank', 'noopener,noreferrer');
-                  }}
-                >
-                  NOTIFY VIA WHATSAPP 💬
                 </button>
 
                 <button

@@ -35,18 +35,19 @@ export function useBooking() {
           },
           bookingId: result.bookingId,
           record: result.bookingRecord,
-          whatsappStatus: result.whatsappStatus
+          whatsappMsg: result.whatsappMsg,
+          whatsappUrl: result.whatsappUrl
         });
         setIsSubmitted(true);
-        return { success: true, bookingId: result.bookingId };
+        return { success: true, bookingId: result.bookingId, whatsappUrl: result.whatsappUrl };
       } else {
-        const err = result?.message || "We couldn't submit your booking request. Please try again.";
+        const err = result?.message || 'Your booking could not be submitted. Please try again.';
         setSubmitError(err);
         return { success: false, error: err };
       }
     } catch (err) {
       console.error('Booking Submission Hook Error:', err);
-      const errMsg = "We couldn't submit your booking request. Please try again.";
+      const errMsg = 'Your booking could not be submitted. Please try again.';
       setSubmitError(errMsg);
       return { success: false, error: errMsg };
     } finally {

@@ -3,6 +3,7 @@
  */
 import bookingRepository from '../repositories/bookingRepository';
 import { validateBookingForm } from '../utils/validation';
+import { buildWhatsAppMessage, generateWhatsAppUrl } from '../utils/whatsapp';
 
 export const bookingService = {
   async submitBooking(formData, files = []) {
@@ -39,14 +40,34 @@ export const bookingService = {
         type: file.type
       })),
       consent: {
-        termsAccepted: true,
-        privacyAccepted: true,
+        termsAccepted: Boolean(formData.termsAccepted),
+        privacyAccepted: Boolean(formData.termsAccepted),
         submittedAt: new Date().toISOString()
       }
     };
 
+    // Step 3 & 4: Save booking data into Supabase DB & Storage
     const res = await bookingRepository.createBooking(payload, files);
-    return res;
+
+    if (!res || !res.success) {
+      return {
+        success: false,
+        message: res?.message || 'Your booking could not be submitted. Please try again.'
+      };
+    }
+
+    // Step 5: Construct complete WhatsApp message containing booking info
+    const fileNames = files.map((f) => f.name);
+    const whatsappMsg = buildWhatsAppMessage(formData, res.bookingId, fileNames);
+    const whatsappUrl = generateWhatsAppUrl(whatsappMsg);
+
+    return {
+      success: true,
+      bookingId: res.bookingId,
+      bookingRecord: res.bookingRecord,
+      whatsappMsg,
+      whatsappUrl
+    };
   },
 
   async getBooking(bookingId) {

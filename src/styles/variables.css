@@ -16,9 +16,11 @@
   --violet-glow: rgba(139, 92, 246, 0.35);
   --purple-glow: rgba(124, 58, 237, 0.5);
 
-  /* Accent: Hot Magenta / Pink */
+  /* Accent: Hot Magenta / Pink & Official Logo Gold */
   --magenta-hot: #ec4899;
   --magenta-glow: rgba(236, 72, 153, 0.4);
+  --gold-accent: #f59e0b;
+  --gold-glow: rgba(245, 158, 11, 0.4);
 
   /* Glassmorphism Tokens */
   --glass-bg: rgba(3, 7, 18, 0.45);

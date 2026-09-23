@@ -97,23 +97,19 @@
   min-width: 0;
 }
 
-.brand-logo .logo-text {
-  font-family: 'Unbounded', 'Space Grotesk', 'Syne', 'Orbitron', 'Poppins', sans-serif;
-  font-size: 20px;
-  font-weight: 800;
-  font-style: normal;
-  letter-spacing: -0.6px;
-  color: #ffffff;
-  background: linear-gradient(135deg, #ffffff 20%, var(--cyan-bright) 70%, var(--violet-electric) 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  transition: all 0.3s ease;
-  text-transform: lowercase;
+.header-logo-img {
+  height: clamp(48px, 5.2vw, 64px);
+  width: auto;
+  max-width: 320px;
+  object-fit: contain;
+  display: block;
+  filter: drop-shadow(0 0 14px rgba(0, 240, 255, 0.45));
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), filter 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.brand-logo:hover .logo-text {
-  filter: drop-shadow(0 0 14px var(--cyan-glow-strong));
-  transform: scale(1.02);
+.brand-logo:hover .header-logo-img {
+  transform: scale(1.04);
+  filter: drop-shadow(0 0 20px rgba(0, 240, 255, 0.75));
 }
 
 .nav-links {
@@ -322,13 +318,9 @@
     min-width: 0;
   }
 
-  .brand-logo .logo-text {
-    font-size: clamp(0.85rem, 4vw, 1.15rem);
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    display: block;
-    max-width: 100%;
+  .header-logo-img {
+    height: clamp(34px, 7.5vw, 46px);
+    max-width: 190px;
   }
 
   .nav-actions {
@@ -366,8 +358,9 @@
     gap: 6px;
   }
 
-  .brand-logo .logo-text {
-    font-size: clamp(0.75rem, 3.6vw, 0.9rem);
+  .header-logo-img {
+    height: clamp(28px, 6.8vw, 36px);
+    max-width: 140px;
   }
 
   .nav-actions {
