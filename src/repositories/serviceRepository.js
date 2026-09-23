@@ -9,16 +9,14 @@ import ENDPOINTS from '../api/endpoints';
 
 export const serviceRepository = {
   async getAllServices() {
-    // Try remote API if available, fallback to static local data
     try {
       const res = await apiClient(ENDPOINTS.SERVICES);
       if (res.success && Array.isArray(res.data) && res.data.length > 0) {
         return res.data;
       }
     } catch (_) {
-      // Gracefully handle network / API unavailability
+      // Fallback
     }
-
     return servicesData;
   },
 

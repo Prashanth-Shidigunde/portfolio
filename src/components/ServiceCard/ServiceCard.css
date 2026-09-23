@@ -81,7 +81,7 @@
 .service-price {
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  gap: 4px;
 }
 
 .price-label {
@@ -91,13 +91,30 @@
   color: var(--text-muted);
 }
 
-.price-value {
-  font-size: 1.05rem;
+.price-value-container {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.price-amount-bold {
+  font-family: var(--font-headline);
+  font-size: 1.65rem;
   font-weight: 800;
   color: #ffffff;
-  background: linear-gradient(135deg, #ffffff 40%, var(--cyan-bright) 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+  letter-spacing: -0.5px;
+  line-height: 1.1;
+}
+
+.price-suffix-red {
+  font-family: var(--font-headline);
+  font-size: 0.82rem;
+  font-weight: 800;
+  color: #ff4d4d;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  line-height: 1.1;
 }
 
 .service-btn {

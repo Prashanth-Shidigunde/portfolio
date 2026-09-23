@@ -2,83 +2,105 @@ import React from 'react';
 import logoImg from '../../assets/images/pulse-blend-media-logo.png';
 import './WhyPulseBlendMedia.css';
 
+// Minimal, modern icon components (1.75px stroke width, cyan accent)
+const ExperienceIcon = ({ className = '' }) => (
+  <svg className={`feature-icon ${className}`} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+    <rect x="2" y="7" width="20" height="14" rx="2" ry="2" />
+    <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16" />
+  </svg>
+);
+
+const DeliveryIcon = ({ className = '' }) => (
+  <svg className={`feature-icon ${className}`} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+    <circle cx="12" cy="12" r="10" />
+    <polyline points="12 6 12 12 16 14" />
+  </svg>
+);
+
+const CommunicationIcon = ({ className = '' }) => (
+  <svg className={`feature-icon ${className}`} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+    <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z" />
+  </svg>
+);
+
+const PricingIcon = ({ className = '' }) => (
+  <svg className={`feature-icon ${className}`} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+    <path d="M20 7h-7a2 2 0 0 1-2-2V3a1 1 0 0 0-1-1H4a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2z" />
+    <circle cx="16" cy="14" r="1" fill="currentColor" />
+  </svg>
+);
+
+const RevisionsIcon = ({ className = '' }) => (
+  <svg className={`feature-icon ${className}`} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+    <path d="M21 12a9 9 0 0 0-9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" />
+    <path d="M3 3v5h5" />
+    <path d="M3 12a9 9 0 0 0 9 9 9.75 9.75 0 0 0 6.74-2.74L21 16" />
+    <path d="M16 16h5v5" />
+  </svg>
+);
+
+const ServicesIcon = ({ className = '' }) => (
+  <svg className={`feature-icon ${className}`} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+    <polygon points="12 2 2 7 12 12 22 7 12 2" />
+    <polyline points="2 17 12 22 22 17" />
+    <polyline points="2 12 12 17 22 12" />
+  </svg>
+);
+
 const matrixRows = [
   {
     id: 'row-01',
+    num: '01',
     feature: 'Experience',
+    Icon: ExperienceIcon,
     pulseBlendMedia: '2+ years of hands-on creative work across editing, design and digital projects.',
-    otherOptions: 'Experience can vary from provider to provider.',
-    whatToCheck: 'Ask to see relevant work, not just a list of services.',
+    otherOptions: 'Experience can vary from one provider to another.',
+    whatToCheck: 'Ask to see work that matches the kind of project you need.',
   },
   {
     id: 'row-02',
-    feature: 'Delivery Time',
-    pulseBlendMedia: 'Project timelines are discussed according to the service and scope before work begins.',
-    otherOptions: 'Timelines depend on the provider and project.',
+    num: '02',
+    feature: 'Delivery',
+    Icon: DeliveryIcon,
+    pulseBlendMedia: 'Project timelines are discussed around the service and scope before work begins.',
+    otherOptions: 'Delivery times depend on the provider and project.',
     whatToCheck: 'Know when you can expect the first version and final delivery.',
   },
   {
     id: 'row-03',
-    feature: 'Communication',
-    pulseBlendMedia: 'Discuss your idea, requirements, references and changes directly.',
+    num: '03',
+    feature: 'Direct Communication',
+    Icon: CommunicationIcon,
+    pulseBlendMedia: 'Discuss your idea, references, changes and requirements directly.',
     otherOptions: 'Communication methods vary by provider.',
-    whatToCheck: 'Make sure there is a clear way to discuss changes and updates.',
+    whatToCheck: 'Make sure you know who to contact when you need an update or change.',
   },
   {
     id: 'row-04',
-    feature: 'Pricing',
+    num: '04',
+    feature: 'Clear Pricing',
+    Icon: PricingIcon,
     pulseBlendMedia: 'Pricing is discussed around the actual service, scope and requirement.',
     otherOptions: 'Pricing depends on the provider and project scope.',
-    whatToCheck: 'Understand what is included before you agree to the price.',
+    whatToCheck: 'Confirm what is included before you agree to the price.',
   },
   {
     id: 'row-05',
-    feature: 'Creative Quality',
-    pulseBlendMedia: 'Each project is shaped around the idea, audience and visual direction.',
-    otherOptions: 'Creative approach varies from one provider to another.',
-    whatToCheck: 'Look for work similar to the style you actually want.',
+    num: '05',
+    feature: 'Revisions',
+    Icon: RevisionsIcon,
+    pulseBlendMedia: 'Revision expectations can be discussed clearly before the project starts.',
+    otherOptions: 'Revision policies vary by provider.',
+    whatToCheck: 'Know how changes will be handled before approving the project.',
   },
   {
     id: 'row-06',
-    feature: 'Revisions',
-    pulseBlendMedia: 'Revision expectations can be discussed clearly before the project starts.',
-    otherOptions: 'Revision terms vary by provider.',
-    whatToCheck: 'Ask how changes are handled before approving the project.',
-  },
-  {
-    id: 'row-07',
-    feature: 'Service Range',
+    num: '06',
+    feature: 'Multiple Creative Services',
+    Icon: ServicesIcon,
     pulseBlendMedia: 'Video editing, photo editing, shooting, website design, piano classes, computer teaching and custom requirements.',
     otherOptions: 'Some providers focus on one specialty or a smaller service range.',
-    whatToCheck: 'Choose someone whose skills match your actual requirement.',
-  },
-  {
-    id: 'row-08',
-    feature: 'Custom Requirements',
-    pulseBlendMedia: 'Have an unusual idea? Discuss it directly and find the right approach.',
-    otherOptions: 'Custom work depends on what each provider offers.',
-    whatToCheck: 'Ask whether your specific idea can actually be handled.',
-  },
-  {
-    id: 'row-09',
-    feature: 'Final Delivery',
-    pulseBlendMedia: 'Final deliverables are provided according to the agreed project scope and format.',
-    otherOptions: 'Final delivery depends on the provider and project.',
-    whatToCheck: 'Confirm exactly what files, formats and assets you will receive.',
-  },
-  {
-    id: 'row-10',
-    feature: 'After-Delivery Support',
-    pulseBlendMedia: 'Questions or follow-up needs can be discussed after delivery according to the project.',
-    otherOptions: 'Support policies vary by provider.',
-    whatToCheck: 'Know who to contact if you need help after delivery.',
-  },
-  {
-    id: 'row-11',
-    feature: 'Getting Started',
-    pulseBlendMedia: 'Tell us what you need, share references and we can discuss the next step.',
-    otherOptions: 'Each provider has their own starting process.',
-    whatToCheck: 'Choose a process that feels clear and comfortable before you commit.',
+    whatToCheck: 'Choose a provider whose skills match what you actually need.',
   },
 ];
 
@@ -94,7 +116,7 @@ export function WhyPulseBlendMedia() {
           WHY PULSE_BLEND_MEDIA?
         </h2>
         <p className="why-pbm-subtext">
-          Because creative work is not just about making something look good. It's about getting the right result, at the right time, with clear communication.
+          Creative work should feel clear from the first conversation to the final delivery.
         </p>
       </div>
 
@@ -124,7 +146,7 @@ export function WhyPulseBlendMedia() {
                     <span className="col-sub">MARKETPLACE &amp; FREELANCERS</span>
                   </th>
                   <th className="col-smartcheck">
-                    <span className="col-title">WHAT TO CHECK BEFORE YOU BOOK</span>
+                    <span className="col-title">WHAT TO CHECK</span>
                     <span className="col-sub">SMART CHECK GUIDE</span>
                   </th>
                 </tr>
@@ -133,7 +155,10 @@ export function WhyPulseBlendMedia() {
                 {matrixRows.map((row) => (
                   <tr key={row.id} className="matrix-row">
                     <td className="cell-feature">
-                      <span className="feature-name">{row.feature}</span>
+                      <div className="feature-cell-content">
+                        <row.Icon />
+                        <span className="feature-name">{row.feature}</span>
+                      </div>
                     </td>
                     <td className="cell-pbm highlighted-cell">
                       <div className="cell-content">
@@ -161,11 +186,14 @@ export function WhyPulseBlendMedia() {
 
           {/* MOBILE STACKED CARDS VIEW (<= 768px) */}
           <div className="matrix-mobile-cards">
-            {matrixRows.map((row, idx) => (
+            {matrixRows.map((row) => (
               <div key={row.id} className="pbm-mobile-card">
                 <div className="mobile-card-top">
-                  <span className="row-index">{idx + 1 < 10 ? `0${idx + 1}` : idx + 1}</span>
-                  <h3 className="mobile-feature-title">{row.feature}</h3>
+                  <span className="row-index">{row.num}</span>
+                  <div className="mobile-feature-header">
+                    <row.Icon />
+                    <h3 className="mobile-feature-title">{row.feature}</h3>
+                  </div>
                 </div>
 
                 {/* Pulse_Blend_Media Highlighted Block */}
@@ -193,11 +221,11 @@ export function WhyPulseBlendMedia() {
                   </p>
                 </div>
 
-                {/* What To Check Before You Book Block */}
+                {/* What To Check Block */}
                 <div className="mobile-block smartcheck-block">
                   <div className="mobile-block-head">
                     <span className="badge-dot-smartcheck"></span>
-                    <span className="block-title-smartcheck">WHAT TO CHECK BEFORE YOU BOOK</span>
+                    <span className="block-title-smartcheck">WHAT TO CHECK</span>
                     <span className="block-sub-smartcheck">SMART CHECK</span>
                   </div>
                   <p className="mobile-block-body">
@@ -216,3 +244,4 @@ export function WhyPulseBlendMedia() {
 }
 
 export default WhyPulseBlendMedia;
+
