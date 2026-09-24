@@ -21,7 +21,15 @@ const ROLE_OPTIONS = [
   'Other'
 ];
 
-export function FeedbackForm({ onSubmitFeedback, isSubmitting, submitError, submitSuccess, onOpenLegal, onCloseModal }) {
+export function FeedbackForm({
+  onSubmitFeedback,
+  isSubmitting,
+  submitError,
+  submitSuccess,
+  onOpenLegal,
+  onCloseModal,
+  onDirtyChange
+}) {
   const [formData, setFormData] = useState({
     fullName: '',
     email: '',
@@ -34,6 +42,16 @@ export function FeedbackForm({ onSubmitFeedback, isSubmitting, submitError, subm
 
   const [hoverRating, setHoverRating] = useState(0);
   const [errors, setErrors] = useState({});
+
+  const checkDirty = (data) => {
+    return Boolean(
+      data.fullName.trim() ||
+      data.email.trim() ||
+      data.feedback.trim() ||
+      data.role ||
+      data.service
+    );
+  };
 
   const validateEmail = (email) => {
     if (!email) return true; // Optional field
@@ -83,10 +101,16 @@ export function FeedbackForm({ onSubmitFeedback, isSubmitting, submitError, subm
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: type === 'checkbox' ? checked : value
-    }));
+    setFormData((prev) => {
+      const nextData = {
+        ...prev,
+        [name]: type === 'checkbox' ? checked : value
+      };
+      if (onDirtyChange) {
+        onDirtyChange(checkDirty(nextData));
+      }
+      return nextData;
+    });
 
     if (errors[name]) {
       setErrors((prev) => ({ ...prev, [name]: '' }));
@@ -94,7 +118,13 @@ export function FeedbackForm({ onSubmitFeedback, isSubmitting, submitError, subm
   };
 
   const handleStarClick = (ratingVal) => {
-    setFormData((prev) => ({ ...prev, rating: ratingVal }));
+    setFormData((prev) => {
+      const nextData = { ...prev, rating: ratingVal };
+      if (onDirtyChange) {
+        onDirtyChange(checkDirty(nextData));
+      }
+      return nextData;
+    });
     if (errors.rating) {
       setErrors((prev) => ({ ...prev, rating: '' }));
     }
