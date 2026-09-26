@@ -69,12 +69,14 @@ web_modules/
 # Yarn Integrity file
 .yarn-integrity
 
-# Environment variables
+# Environment variables & Token Storage
 .env
 .env.local
 .env.development.local
 .env.test.local
 .env.production.local
+ms_tokens.json
+server/data/*.json
 
 # parcel-bundler cache
 .cache

@@ -7,3 +7,4 @@ router.post('/', validateBookingBody, bookingController.createBooking);
 router.get('/:id', bookingController.getBookingById);
 
 module.exports = router;
+

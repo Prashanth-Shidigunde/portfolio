@@ -5,7 +5,8 @@
  */
 import { supabase } from '../lib/supabase';
 
-const PRIMARY_BUCKET = 'client-files';
+const PRIMARY_BUCKET = 'booking-reference-files';
+const FALLBACK_BUCKET = 'client-files';
 
 export const storageService = {
   /**
@@ -22,7 +23,8 @@ export const storageService = {
       const uniqueId = (typeof crypto !== 'undefined' && crypto.randomUUID) 
         ? crypto.randomUUID() 
         : `${Date.now()}_${Math.random().toString(36).substring(2, 8)}`;
-      const storagePath = `${bookingId}/${uniqueId}-${cleanFileName}`;
+      const uniqueFilename = `${uniqueId}-${cleanFileName}`;
+      const storagePath = `bookings/${bookingId}/${uniqueFilename}`;
 
       console.log('--- Storage upload started ---');
       console.log('Storage bucket:', PRIMARY_BUCKET);
@@ -31,14 +33,28 @@ export const storageService = {
       console.log('File type:', file.type);
       console.log('File size:', file.size);
 
-      // Upload actual File binary object to Supabase Storage bucket 'client-files'
-      const uploadRes = await supabase.storage
-        .from(PRIMARY_BUCKET)
+      // Upload actual File binary object to Supabase Storage bucket 'booking-reference-files'
+      let targetBucket = PRIMARY_BUCKET;
+      let uploadRes = await supabase.storage
+        .from(targetBucket)
         .upload(storagePath, file, {
           cacheControl: '3600',
           upsert: false,
           contentType: file.type || 'application/octet-stream'
         });
+
+      // Fallback if booking-reference-files bucket does not exist yet on Supabase
+      if (uploadRes.error && (uploadRes.error.message?.includes('not found') || uploadRes.error.statusCode === '404' || uploadRes.error.error === 'Bucket not found')) {
+        console.warn(`Notice: Primary bucket ${PRIMARY_BUCKET} missing, trying fallback bucket ${FALLBACK_BUCKET}...`);
+        targetBucket = FALLBACK_BUCKET;
+        uploadRes = await supabase.storage
+          .from(targetBucket)
+          .upload(storagePath, file, {
+            cacheControl: '3600',
+            upsert: false,
+            contentType: file.type || 'application/octet-stream'
+          });
+      }
 
       console.log('Storage upload response:', uploadRes.data);
 
@@ -52,19 +68,19 @@ export const storageService = {
       }
 
       const fileRef = {
-        name: file.name,
-        path: storagePath,
-        bucket: PRIMARY_BUCKET,
-        type: file.type,
-        size: file.size,
-        uploaded_at: new Date().toISOString()
+        fileName: file.name,
+        storagePath: storagePath,
+        bucket: targetBucket,
+        mimeType: file.type,
+        fileSize: file.size,
+        uploadedAt: new Date().toISOString()
       };
 
       return {
         success: true,
         fileRef,
         storagePath,
-        bucket: PRIMARY_BUCKET
+        bucket: targetBucket
       };
     } catch (err) {
       console.error('❌ Storage upload exception:', err);

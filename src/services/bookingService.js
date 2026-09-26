@@ -1,12 +1,17 @@
 /**
  * Booking Business Service
+ * Formats ONE ORIGINAL bookingPayload and dispatches to:
+ * 1. Supabase Database & Storage (Primary)
+ * 2. WhatsApp Message & URL
  */
 import bookingRepository from '../repositories/bookingRepository';
 import { validateBookingForm } from '../utils/validation';
-import { buildWhatsAppMessage, generateWhatsAppUrl } from '../utils/whatsapp';
+import { generateBookingId } from '../lib/supabaseClient';
+import whatsappService from './whatsappService';
 
 export const bookingService = {
   async submitBooking(formData, files = []) {
+    // 1. Form Validation
     const validation = validateBookingForm(formData);
     if (!validation.isValid) {
       return {
@@ -16,55 +21,74 @@ export const bookingService = {
       };
     }
 
-    const payload = {
+    const bookingId = generateBookingId();
+    const createdAt = new Date().toISOString();
+
+    const selectedService = formData.selectedService;
+    const customServiceName = selectedService === 'Custom Requirement' ? (formData.customServiceName ? formData.customServiceName.trim() : null) : null;
+    const preferredTime = formData.preferredTimeSlot === 'Custom Slot' ? (formData.customTimeSlot ? formData.customTimeSlot.trim() : 'Custom Slot') : (formData.preferredTimeSlot || 'Flexible Slot (Recommended)');
+
+    // 2. CREATE ONE ORIGINAL SOURCE BOOKING PAYLOAD
+    const bookingPayload = {
+      bookingId,
+      createdAt,
+      status: 'REQUESTED',
+
       customer: {
-        fullName: formData.fullName.trim(),
-        email: formData.email.trim(),
-        country: formData.country,
-        state: formData.state,
-        countryCode: formData.countryCode,
-        mobile: `${formData.countryCode} ${formData.mobile.trim()}`
+        fullName: formData.fullName ? formData.fullName.trim() : '',
+        email: formData.email ? formData.email.trim() : '',
+        country: formData.country || '',
+        state: formData.state || '',
+        countryCode: formData.countryCode || '+91',
+        mobileNumber: `${formData.countryCode || '+91'} ${formData.mobile ? formData.mobile.trim() : ''}`.trim()
       },
+
       service: {
-        selectedService: formData.selectedService,
-        customServiceName: formData.selectedService === 'Custom Requirement' ? formData.customServiceName.trim() : null,
-        projectRequirements: formData.projectRequirements.trim(),
+        selectedService,
+        customServiceName,
+        projectRequirements: formData.projectRequirements ? formData.projectRequirements.trim() : '',
         preferredDate: formData.preferredDate || null,
-        preferredTimeSlot: formData.preferredTimeSlot === 'Custom Slot' ? (formData.customTimeSlot.trim() || 'Custom Slot') : formData.preferredTimeSlot,
-        estimatedBudget: Number(formData.estimatedBudget),
-        referenceLink: formData.referenceLink.trim() || null
+        preferredTime,
+        estimatedBudget: Number(formData.estimatedBudget) || 0,
+        referenceLink: formData.referenceLink && formData.referenceLink.trim() ? formData.referenceLink.trim() : null
       },
-      references: files.map((file) => ({
-        name: file.name,
-        size: file.size,
-        type: file.type
+
+      referenceFiles: (files || []).map((file) => ({
+        fileName: file.name,
+        fileSize: file.size,
+        mimeType: file.type
       })),
+
       consent: {
         termsAccepted: Boolean(formData.termsAccepted),
-        privacyAccepted: Boolean(formData.termsAccepted),
-        submittedAt: new Date().toISOString()
+        privacyAccepted: Boolean(formData.termsAccepted)
       }
     };
 
-    // Step 3 & 4: Save booking data into Supabase DB & Storage
-    const res = await bookingRepository.createBooking(payload, files);
+    // 3. DESTINATION 1: SUPABASE DATABASE & STORAGE
+    const supabaseRes = await bookingRepository.createBooking(bookingPayload, files);
 
-    if (!res || !res.success) {
+    if (!supabaseRes || !supabaseRes.success) {
       return {
         success: false,
-        message: res?.message || 'Your booking could not be submitted. Please try again.'
+        message: supabaseRes?.message || 'Your booking could not be submitted. Please try again.'
       };
     }
 
-    // Step 5: Construct complete WhatsApp message containing booking info
-    const fileNames = files.map((f) => f.name);
-    const whatsappMsg = buildWhatsAppMessage(formData, res.bookingId, fileNames);
-    const whatsappUrl = generateWhatsAppUrl(whatsappMsg);
+    // Attach uploaded files info to payload if available
+    if (supabaseRes.bookingRecord && supabaseRes.bookingRecord.uploaded_files) {
+      bookingPayload.referenceFiles = supabaseRes.bookingRecord.uploaded_files;
+    }
+
+    // 4. DESTINATION 2: WHATSAPP MESSAGE (Create message directly from original bookingPayload!)
+    const whatsappMsg = whatsappService.createBookingWhatsAppMessage(bookingPayload);
+    const whatsappUrl = whatsappService.generateWhatsAppUrlFromPayload(bookingPayload);
 
     return {
       success: true,
-      bookingId: res.bookingId,
-      bookingRecord: res.bookingRecord,
+      bookingId,
+      bookingPayload,
+      bookingRecord: supabaseRes.bookingRecord,
       whatsappMsg,
       whatsappUrl
     };
