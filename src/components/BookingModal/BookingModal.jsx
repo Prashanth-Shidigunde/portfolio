@@ -136,10 +136,46 @@ export function BookingModal({ isOpen, initialService, onClose, onOpenLegal }) {
     return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
   };
 
+  // Auto-scroll to first invalid/unfilled mandatory field
+  const scrollToFirstError = (valErrors) => {
+    const errorKeys = Object.keys(valErrors);
+    if (errorKeys.length === 0) return;
+
+    setTimeout(() => {
+      let firstEl = null;
+
+      // Check DOM elements by ID or name in order of error keys
+      for (const key of errorKeys) {
+        const el = document.getElementById(key) || document.querySelector(`[name="${key}"]`);
+        if (el) {
+          firstEl = el;
+          break;
+        }
+      }
+
+      // Fallback search inside modal for any error class
+      if (!firstEl && modalRef.current) {
+        firstEl = modalRef.current.querySelector('.input-error, .error-msg, .consent-error');
+      }
+
+      if (firstEl) {
+        firstEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        if (typeof firstEl.focus === 'function') {
+          firstEl.focus({ preventScroll: true });
+        }
+      }
+    }, 50);
+  };
+
   // Form Validation
   const validateForm = () => {
     const { isValid, errors: valErrors } = validateBookingForm(formData);
     setErrors(valErrors);
+
+    if (!isValid) {
+      scrollToFirstError(valErrors);
+    }
+
     return isValid;
   };
 

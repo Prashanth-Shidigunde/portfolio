@@ -55,6 +55,23 @@ export function ContactForm() {
     }
 
     setErrors(newErrors);
+
+    if (Object.keys(newErrors).length > 0) {
+      const errorKeys = Object.keys(newErrors);
+      setTimeout(() => {
+        for (const key of errorKeys) {
+          const el = document.getElementById(`contact-${key}`) || document.querySelector(`[name="${key}"]`);
+          if (el) {
+            el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            if (typeof el.focus === 'function') {
+              el.focus({ preventScroll: true });
+            }
+            break;
+          }
+        }
+      }, 50);
+    }
+
     return Object.keys(newErrors).length === 0;
   };
 
