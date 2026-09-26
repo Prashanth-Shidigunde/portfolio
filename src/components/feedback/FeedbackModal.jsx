@@ -94,17 +94,15 @@ export function FeedbackModal({
           </button>
         </div>
 
-        <div className="feedback-modal-body">
-          <FeedbackForm
-            onSubmitFeedback={onSubmitFeedback}
-            isSubmitting={isSubmitting}
-            submitError={submitError}
-            submitSuccess={submitSuccess}
-            onOpenLegal={onOpenLegal}
-            onCloseModal={onClose}
-            onDirtyChange={handleDirtyChange}
-          />
-        </div>
+        <FeedbackForm
+          onSubmitFeedback={onSubmitFeedback}
+          isSubmitting={isSubmitting}
+          submitError={submitError}
+          submitSuccess={submitSuccess}
+          onOpenLegal={onOpenLegal}
+          onCloseModal={onClose}
+          onDirtyChange={handleDirtyChange}
+        />
       </div>
     </div>,
     document.body

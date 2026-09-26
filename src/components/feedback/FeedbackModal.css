@@ -9,7 +9,7 @@
   right: 0;
   bottom: 0;
   width: 100vw;
-  height: 100vh;
+  height: 100dvh;
   background: rgba(3, 7, 18, 0.92);
   backdrop-filter: blur(16px) saturate(180%);
   -webkit-backdrop-filter: blur(16px) saturate(180%);
@@ -17,7 +17,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 20px;
+  padding: 16px;
   box-sizing: border-box;
   animation: feedbackModalFadeIn 0.25s cubic-bezier(0.16, 1, 0.3, 1);
   touch-action: none;
@@ -36,8 +36,8 @@
 
 .feedback-modal-container {
   width: min(92vw, 760px);
-  max-height: 90vh;
-  height: auto;
+  max-height: calc(100dvh - 32px);
+  height: 100%;
   display: flex;
   flex-direction: column;
   background: #080e1a;
@@ -58,8 +58,7 @@
    ========================================================================== */
 
 .feedback-modal-header {
-  position: sticky;
-  top: 0;
+  position: relative;
   z-index: 10;
   background: #080e1a;
   padding: 24px 28px 16px 28px;
@@ -145,32 +144,47 @@
 }
 
 /* ==========================================================================
-   SCROLLABLE MODAL BODY
+   SCROLLABLE MODAL CONTENT & FOOTER
    ========================================================================== */
 
-.feedback-modal-body {
-  padding: 24px 28px 28px 28px;
+.feedback-modal-content {
+  flex: 1;
+  min-height: 0;
   overflow-y: auto;
   overscroll-behavior: contain;
   -webkit-overflow-scrolling: touch;
+  padding: 24px 28px 32px 28px;
   box-sizing: border-box;
   width: 100%;
-  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
   background: #080e1a;
 }
 
-/* Custom Scrollbar for Modal Body */
-.feedback-modal-body::-webkit-scrollbar {
+.feedback-modal-footer {
+  flex-shrink: 0;
+  background: #080e1a;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 16px 28px;
+  box-sizing: border-box;
+  width: 100%;
+  z-index: 10;
+  box-shadow: 0 -10px 25px rgba(0, 0, 0, 0.5);
+}
+
+/* Custom Scrollbar for Modal Content */
+.feedback-modal-content::-webkit-scrollbar {
   width: 6px;
 }
-.feedback-modal-body::-webkit-scrollbar-track {
+.feedback-modal-content::-webkit-scrollbar-track {
   background: rgba(15, 23, 42, 0.6);
 }
-.feedback-modal-body::-webkit-scrollbar-thumb {
+.feedback-modal-content::-webkit-scrollbar-thumb {
   background: rgba(56, 189, 248, 0.25);
   border-radius: 3px;
 }
-.feedback-modal-body::-webkit-scrollbar-thumb:hover {
+.feedback-modal-content::-webkit-scrollbar-thumb:hover {
   background: var(--cyan-bright, #38bdf8);
 }
 
@@ -180,11 +194,11 @@
 
 @media (max-width: 640px) {
   .feedback-modal-overlay {
-    padding: 12px;
+    padding: 8px;
   }
   .feedback-modal-container {
-    width: calc(100vw - 24px);
-    max-height: calc(100vh - 24px);
+    width: calc(100vw - 16px);
+    max-height: calc(100dvh - 16px);
     border-radius: 16px;
   }
   .feedback-modal-header {
@@ -201,7 +215,12 @@
     height: 32px;
     font-size: 1.3rem;
   }
-  .feedback-modal-body {
-    padding: 16px 18px 20px 18px;
+  .feedback-modal-content {
+    padding: 16px 18px 28px 18px;
+    gap: 16px;
+  }
+  .feedback-modal-footer {
+    padding: 14px 18px;
+    padding-bottom: calc(14px + env(safe-area-inset-bottom, 0px));
   }
 }

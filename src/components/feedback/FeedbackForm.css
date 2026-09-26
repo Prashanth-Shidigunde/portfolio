@@ -1,7 +1,8 @@
 .feedback-form {
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  flex: 1;
+  min-height: 0;
   width: 100%;
   box-sizing: border-box;
 }
@@ -231,19 +232,23 @@
 
 .feedback-submit-btn {
   width: 100%;
+  min-height: 52px;
   padding: 14px 28px;
   border-radius: 12px;
   background: linear-gradient(135deg, rgba(0, 240, 255, 0.2) 0%, rgba(139, 92, 246, 0.3) 100%);
   border: 1px solid var(--cyan-electric);
   color: #ffffff;
   font-family: var(--font-body);
-  font-size: 0.9rem;
+  font-size: 0.95rem;
   font-weight: 700;
   letter-spacing: 1px;
   cursor: pointer;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   box-shadow: 0 0 20px var(--cyan-glow);
   text-transform: uppercase;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .feedback-submit-btn:hover:not(:disabled) {
